@@ -1,7 +1,6 @@
 import discord
+import jett
 from discord.ext import commands
-
-TOKEN = 'OTM3MzgwNzI5OTIxMzQ3NjA0.Yfa51Q.VAE1JbUB-hXS1JqnyLMdhlmLNGg'
 
 prefix = '%'
 
@@ -19,4 +18,4 @@ async def on_ready():
     print('Bot ID: {}'.format(client.user.id))
 
 
-client.run(TOKEN)
+client.run(jett.TOKEN)
