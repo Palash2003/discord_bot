@@ -1,13 +1,30 @@
-import discord
+import sys
 import json
 from discord.ext import commands
+
+path = sys.path[0]+'/data'
+
+
+async def load_user(guild):
+    print(f'loading {guild}')
+    with open(f'{path}/{guild}.json', 'r') as f:
+        user = json.load(f)
+    return user
+
+
+async def save_user(user, guild):
+    print(f'saving {user} in {guild}')
+    with open(f'{path}/{guild}.json', 'w') as f:
+        json.dump(user, f, indent=2)
+    return user
 
 
 async def server_id(server):
     try:
-        open(f'{server}.json', 'x')
-        with open(f'{server}.json', 'w') as f:
-            json.dump({}, f)
+        open(f'{path}/{server}.json', 'x')
+        print(f'created server file {server}')
+        with open(f'{path}/{server}.json', 'w') as f:
+            json.dump({}, f, indent=2)
     except:
         pass
 
@@ -40,33 +57,24 @@ class level(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         await server_id(member.guild.id)
-        with open(f'{member.guild.id}.json', 'r') as x:
-            user = json.load(x)
-
+        user = await load_user(member.guild.id)
         await update_data(self, user, member)
-
-        with open(f'{member.guild.id}.json', 'w') as y:
-            json.dump(user, y)
+        await save_user(user, member.guild.id)
 
     @commands.Cog.listener()
     async def on_message(self, message):
         await server_id(message.guild.id)
         if message.author.bot == False:
-            with open(f'{message.guild.id}.json', 'r') as x:
-                user = json.load(x)
-
+            user = await load_user(message.guild.id)
             await update_data(user, message.author)
             await add_experience(user, message.author, (len(message.content)/2))
             await level_up(user, message.author, message)
-
-            with open(f'{message.guild.id}.json', 'w') as y:
-                json.dump(user, y)
+            await save_user(user, message.guild.id)
 
     @commands.command()
     async def level(self, ctx):
         await server_id(ctx.guild.id)
-        with open(f'{ctx.guild.id}.json', 'r') as x:
-            user = json.load(x)
+        user = await load_user(ctx.guild.id)
         level = user[f'{ctx.author.id}']['level']
         experience = user[f'{ctx.author.id}']['experience']
         await ctx.send(f'{ctx.author.mention} is at level {level} and has {experience} experience')
