@@ -1,19 +1,18 @@
 import sys
 import json
+import discord
 from discord.ext import commands
 
 path = sys.path[0]+'/database'
 
 
 async def load_user(guild):
-    print(f'loading {guild}')
     with open(f'{path}/{guild}.json', 'r') as f:
         user = json.load(f)
     return user
 
 
 async def save_user(user, guild):
-    print(f'saving {user} in {guild}')
     with open(f'{path}/{guild}.json', 'w') as f:
         json.dump(user, f, indent=2)
     return user
@@ -22,7 +21,6 @@ async def save_user(user, guild):
 async def server_id(server):
     try:
         open(f'{path}/{server}.json', 'x')
-        print(f'created server file {server}')
         with open(f'{path}/{server}.json', 'w') as f:
             json.dump({}, f, indent=2)
     except:
@@ -72,12 +70,21 @@ class level(commands.Cog):
             await save_user(user, message.guild.id)
 
     @commands.command()
-    async def level(self, ctx):
+    async def level(self, ctx, *args: discord.User):
         await server_id(ctx.guild.id)
         user = await load_user(ctx.guild.id)
-        level = user[f'{ctx.author.id}']['level']
-        experience = user[f'{ctx.author.id}']['experience']
-        await ctx.send(f'{ctx.author.mention} is at level {level} and has {experience} experience')
+
+        if len(args) == 0:
+            level = user[f'{ctx.author.id}']['level']
+            experience = user[f'{ctx.author.id}']['experience']
+            await ctx.send(f'{ctx.author.mention} has level {level} and has {experience} experience')
+        else:
+            for member in args:
+                if member.id not in user:
+                    await update_data(user, member.id)
+                level = user[f'{member.id}']['level']
+                experience = user[f'{member.id}']['experience']
+                await ctx.send(f'{member.mention} has level {level} and {experience} experience')
 
 
 def setup(client):
