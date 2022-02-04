@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  jett:
+    image: palash/jett
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./database:/Bot/database
+    environment:
+      - TOKEN=<TOKEN>
+      - PREFIX=%
+    restart: always

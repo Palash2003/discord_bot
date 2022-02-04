@@ -1,3 +1,4 @@
 jett.py
 data/*
 __pycache__
+*.json
