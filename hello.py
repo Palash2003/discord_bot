@@ -17,6 +17,7 @@ for cog in cogs:
 async def on_ready():
     print('Connected to bot: {}'.format(client.user.name))
     print('Bot ID: {}'.format(client.user.id))
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you"))
 
 
 client.run(token)

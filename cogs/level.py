@@ -1,3 +1,4 @@
+from cmath import exp
 import sys
 import json
 import discord
@@ -70,21 +71,21 @@ class level(commands.Cog):
             await save_user(user, message.guild.id)
 
     @commands.command()
-    async def level(self, ctx, *args: discord.User):
+    async def level(self, ctx, member: discord.Member = None):
         await server_id(ctx.guild.id)
         user = await load_user(ctx.guild.id)
-
-        if len(args) == 0:
+        if not member:
+            await update_data(user, ctx.author)
+            member = ctx.author
             level = user[f'{ctx.author.id}']['level']
             experience = user[f'{ctx.author.id}']['experience']
-            await ctx.send(f'{ctx.author.mention} has level {level} and has {experience} experience')
         else:
-            for member in args:
-                if member.id not in user:
-                    await update_data(user, member.id)
-                level = user[f'{member.id}']['level']
-                experience = user[f'{member.id}']['experience']
-                await ctx.send(f'{member.mention} has level {level} and {experience} experience')
+            print(member.id)
+            await update_data(user, member)
+            level = user[f'{member.id}']['level']
+            experience = user[f'{member.id}']['experience']
+            print(level, experience)
+        await ctx.send(embed=discord.Embed(title=f'{member.name}', description=f'Level: {level}\nExperience: {experience}', color=discord.Color.blue()))
 
 
 def setup(client):
