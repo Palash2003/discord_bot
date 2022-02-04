@@ -2,7 +2,7 @@ import sys
 import json
 from discord.ext import commands
 
-path = sys.path[0]+'/data'
+path = sys.path[0]+'/database'
 
 
 async def load_user(guild):

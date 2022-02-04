@@ -1,8 +1,9 @@
 import discord
-import jett
+import os
 from discord.ext import commands
 
-prefix = '%'
+token = os.environ.get('TOKEN')
+prefix = os.environ.get('PREFIX')
 
 client = commands.Bot(command_prefix=prefix)
 
@@ -18,4 +19,4 @@ async def on_ready():
     print('Bot ID: {}'.format(client.user.id))
 
 
-client.run(jett.TOKEN)
+client.run(token)
