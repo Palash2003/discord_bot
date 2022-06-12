@@ -8,9 +8,9 @@ class React(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == 371218182356205568:
-            await message.add_reaction('🤡')
-            await message.reply('Stfu silver')
+        if message.author.id == 604361814569910324:
+            await message.reply('abc')
+            await message.reaction('🤣')
 
 
 def setup(client):

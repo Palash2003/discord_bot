@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 import random
-lista = ['rock', 'paper', 'scissor']
 
+lista = ['rock', 'paper', 'scissor']
 
 class Rps(commands.Cog):
     def __init__(self, bot):
